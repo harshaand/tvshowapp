@@ -32,7 +32,7 @@ window.addEventListener("load", function () {
                         let genreString = show.genres.join(", ");
 
                         htmlinjection += `
-                    <a href="movie.html?id=${show.id}" class="card">
+                    <a href="show.html?id=${show.id}" class="card">
                         <div>
                             <img class="card-poster" src="${imageString}" />
                         </div>

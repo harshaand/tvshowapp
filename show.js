@@ -3,32 +3,27 @@ const id = urlParams.get('id');
 
 
 window.addEventListener("load", function () {
-    const section_movie_overview = document.querySelector(".section-movie-overview");
-    const carousel_track_cast = document.querySelector("#cast-carousel-track");
-    const carousel_track_seasons = document.getElementById("seasons-carousel-track");
-
-    /* ----------------------- Movie overview section -----------------------  */
+    /* ----------------------- Show overview section -----------------------  */
+    const section_show_overview = document.querySelector(".section-show-overview");
     const promise_info = window.fetch(
         "https://api.tvmaze.com/shows/" + id,
         { method: "Get" });
 
-
-    promise_info.then(function (data) {
+    promise_info.then((data) => {
         const json = data.json();
-
-        json.then(function (data) {
-            section_movie_overview.innerHTML = `
+        json.then((data) => {
+            section_show_overview.innerHTML = `
             <div class="section-background-div" style="background-image: url('${data.image.medium}');">
-                <div class="container-movie-overview">
-                    <div class="movie-name-poster-fav">
+                <div class="container-show-overview">
+                    <div class="show-name-poster-fav">
                         <a href="index.html" class="back-button">BACK</a>
-                        <div class="movie-poster-div"><img class="movie-poster" src="${data.image.medium}" alt="">
+                        <div class="show-poster-div"><img class="show-poster" src="${data.image.medium}" alt="">
                         </div>
-                        <div class="movie-information">
-                            <div class="movie-title-fav">
-                                <h1 class="movie-title">${data.name}</h1>
-                                <div class="movie-fav">
-                                    <button id="fav-btn" class="movie-fav-btn">
+                        <div class="show-information">
+                            <div class="show-title-fav">
+                                <h1 class="show-title">${data.name}</h1>
+                                <div class="show-fav">
+                                    <button id="fav-btn" class="show-fav-btn">
                                         <svg class="star-svg" width="24" height="24" viewBox="0 0 24 24">
                                             <path id='starrr' class="star" fill="black" stroke="red" stroke-linecap="round"
                                                 stroke-linejoin="round" stroke-width="0.5"
@@ -38,23 +33,15 @@ window.addEventListener("load", function () {
                                     </button>
                                 </div>
                             </div>
-                            <div class="movie-description movie-description-1">${data.summary}</div>
+                            <div class="show-description show-description-tablet">${data.summary}</div>
                         </div>
-                        <div class="movie-description movie-description-2">${data.summary}</div>
+                        <div class="show-description show-description-mobile">${data.summary}</div>
                     </div>
-                    <div class="movie-description movie-description-3">${data.summary}</div>
+                    <div class="show-description show-description-desktop">${data.summary}</div>
                 </div>
             </div>
             `
-
-
-
-
-
             initialiseFavButton();
-
-
-
         });
     });
     /* ----------------------- ERROR CATCHER -----------------------  */
@@ -62,30 +49,21 @@ window.addEventListener("load", function () {
         let htmlinjection = "";
         console.log("oopsy");
         htmlinjection = htmlinjection + `
-           
-                <div class='no-results'>
+            <div class='no-results'>
                 <svg class='no-results-icon'>
-                    <use href="#my-svg"></use>
+                    <use href="#error-svg"></use>
                 </svg>
                 <h3>No Results </h3>
-                </div>
-            <div class="card-movie-info"></div>
-                `
+            </div>
+            <div class="card-show-info"></div>`
 
         slider.innerHTML = htmlinjection;
     }
 
-    /* ---------------------------------------------------------  */
-
-    /* ----------------------- Cast - movie info section -----------------------  */
-    let fav_btn = document.querySelector('#fav-btn');
-    let star = document.querySelector('.star');
-    let movie_fav;
+    /* ----------------------- Cast - show info section -----------------------  */
     const cast_slider = document.querySelector("#cast-carousel-track");
     const cast_left_btn = document.querySelector("#cast-left-btn");
     const cast_right_btn = document.querySelector("#cast-right-btn");
-    const container_cards_movie_info = document.querySelector(".container-cards-movie-info");
-    const container_width = parseInt(window.getComputedStyle(container_cards_movie_info).width, 10);
 
 
     const promise_cast = window.fetch(
@@ -94,21 +72,19 @@ window.addEventListener("load", function () {
 
     promise_cast.then((data) => {
         const json = data.json();
-        json.then(function (data) {
-            console.log(data);
+        json.then((data) => {
             let htmlinjection = "";
             for (var i = 0; i < data.length; i++) {
                 const imageString = data[i].person.image.medium !== null ? data[i].person.image.medium : "images/error.png"
 
                 htmlinjection = htmlinjection + `
-                    <div class="card-movie-info">
-                        <img class="card-poster-movie-info" src="${imageString}" alt="">
-                        <div class="card-info-div-movie-info">
-                            <h3 class="card-title-movie-info">` + data[i].person.name + `</h3>
-                            <h4 class="card-title-extra">(` + data[i].character.name + `)</h4>
+                    <div class="card-show-info">
+                        <img class="card-poster-show-info" src="${imageString}" alt="">
+                        <div class="card-info-div-show-info">
+                            <h3 class="card-title-show-info">${data[i].person.name}</h3>
+                            <h4 class="card-title-extra">(${data[i].character.name})</h4>
                         </div>
-                    </div>
-                    `
+                    </div>`
             }
             cast_slider.innerHTML = htmlinjection;
             update_carousel_btn_visibility(cast_slider, cast_left_btn, cast_right_btn);
@@ -117,12 +93,9 @@ window.addEventListener("load", function () {
             catchPromiseRejection(cast_slider)
             update_carousel_btn_visibility(cast_slider, cast_left_btn, cast_right_btn);
         });
-    }).catch(() => {
-        catchPromiseRejection(cast_slider)
-        update_carousel_btn_visibility(cast_slider, cast_left_btn, cast_right_btn);
     });
 
-    /* ----------------------- Seasons - movie info section -----------------------  */
+    /* ----------------------- Seasons - show info section -----------------------  */
     const seasons_slider = document.querySelector("#seasons-carousel-track");
     const seasons_left_btn = document.querySelector("#seasons-left-btn");
     const seasons_right_btn = document.querySelector("#seasons-right-btn");
@@ -144,24 +117,15 @@ window.addEventListener("load", function () {
                 const imageString = data[i].image !== null ? data[i].image.medium : "images/error.png"
 
                 htmlinjection = htmlinjection + `
-                    <div class="card-movie-info">
-                        <img class="card-poster-movie-info" src="${imageString}" alt="">
-                        <div class="card-info-div-movie-info">
-                            <h3 class="card-title-movie-info">Season ` + data[i].number + `</h3>
+                    <div class="card-show-info">
+                        <img class="card-poster-show-info" src="${imageString}" alt="">
+                        <div class="card-info-div-show-info">
+                            <h3 class="card-title-show-info">Season ${data[i].number}</h3>
                         </div>
                     </div>
                 `
             }
-
-            //<img class="poster-movie-info" src="`+ data[i].image.medium + `" alt="Hi"
             seasons_slider.innerHTML = htmlinjection;
-
-            const container_cards_movie_info = document.querySelector(".container-cards-movie-info");
-            const container_width = parseInt(window.getComputedStyle(container_cards_movie_info).width, 10);
-
-
-
-
             update_carousel_btn_visibility(seasons_slider, seasons_left_btn, seasons_right_btn);
 
 
@@ -170,39 +134,39 @@ window.addEventListener("load", function () {
             catchPromiseRejection(seasons_slider)
             update_carousel_btn_visibility(seasons_slider, seasons_left_btn, seasons_right_btn);
         });
-    }).catch(() => {
-        catchPromiseRejection(seasons_slider)
-        update_carousel_btn_visibility(seasons_slider, seasons_left_btn, seasons_right_btn);
     });
-    /* ----------------------- Movie fav -----------------------  */
+    /* ----------------------- Show fav -----------------------  */
+    let fav_btn = document.querySelector('#fav-btn');
+    let star = document.querySelector('.star');
+    let show_fav;
 
     function initialiseFavButton() {
         fav_btn = document.querySelector('#fav-btn');
         star = document.querySelector('.star');
-        movie_fav = 'movie' + id;
-        fav_btn.addEventListener('click', setFavMovie);
-        displayFavMovie();
+        show_fav = 'show' + id;
+        fav_btn.addEventListener('click', setFavShow);
+        displayFavShow();
     }
 
-    function setFavMovie() {
-        if (localStorage.getItem(movie_fav) === null) {
-            localStorage.setItem(movie_fav, 'true');
+    function setFavShow() {
+        if (localStorage.getItem(show_fav) === null) {
+            localStorage.setItem(show_fav, 'true');
             star.classList.add('star-filled');
         }
 
-        else if (localStorage.getItem(movie_fav) === 'false') {
-            localStorage.setItem(movie_fav, 'true');
+        else if (localStorage.getItem(show_fav) === 'false') {
+            localStorage.setItem(show_fav, 'true');
             star.classList.add('star-filled');
         }
 
-        else if (localStorage.getItem(movie_fav) === 'true') {
-            localStorage.setItem(movie_fav, 'false');
+        else if (localStorage.getItem(show_fav) === 'true') {
+            localStorage.setItem(show_fav, 'false');
             star.classList.remove('star-filled');
         }
     }
 
-    function displayFavMovie() {
-        const value = localStorage.getItem(movie_fav);
+    function displayFavShow() {
+        const value = localStorage.getItem(show_fav);
 
         if (value === 'false') {
             star.classList.remove('star-filled');
@@ -218,9 +182,9 @@ window.addEventListener("load", function () {
 
     function update_carousel_btn_visibility(slider, left_btn, right_btn) {
         function update_button_visibility() {
-            const container_cards_movie_info = document.querySelector(".container-cards-movie-info");
-            const container_width = parseFloat(window.getComputedStyle(container_cards_movie_info).width);
-            const cards = document.querySelector(".card-movie-info");
+            const container_cards_show_info = document.querySelector(".container-cards-show-info");
+            const container_width = parseFloat(window.getComputedStyle(container_cards_show_info).width);
+            const cards = document.querySelector(".card-show-info");
             const cards_width = parseFloat(window.getComputedStyle(cards).width);
 
             cast_left_btn.onclick = () => { cast_slider.scrollLeft -= (container_width - (cards_width / 2)); };
