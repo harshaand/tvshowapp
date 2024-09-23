@@ -9,6 +9,13 @@
     --p1: 16px;
     --p2: 12px;
 
+    --card-movie-info-width: calc((1280px*0.9)/6.5);
+    --card-movie-info-gap: calc((1280px*0.1)/6);
+
+    --search-bar-start-position: 0px;
+    --search-bar-end-position: 0px;
+    --search-bar-width: 604px;
+    --search-bar-margin-after-animation: 24px;
 }
 
 body {
@@ -16,9 +23,45 @@ body {
     margin: 0;
     font-family: "Inter", sans-serif;
     color: white;
-    background-color: #04152D;
+    background-color: white;
+    background-image:
+        linear-gradient(90deg,
+            rgb(4, 21, 45),
+            20%, rgb(2, 34, 82),
+            80%, rgb(4, 21, 45));
+    ;
 
 }
+
+.index-page-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+
+}
+
+.background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-image:
+        linear-gradient(90deg,
+            rgba(51, 51, 51, 0.95),
+            20%, rgba(2, 34, 82, 0.9),
+            80%, rgba(48, 48, 48, 0.9)), url('images/deadpool.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 1.6s ease-in-out;
+    z-index: -1;
+}
+
+
 
 a {
     text-decoration: none;
@@ -33,28 +76,31 @@ a:visited {
 
 .section-search {
     display: flex;
-    width: 100vw;
-    height: 90vh;
-    background-color: #04152D;
+    width: 100%;
+    height: fit-content;
     justify-content: center;
     align-items: center;
-
-    background-image:
-        linear-gradient(to bottom,
-            rgba(4, 21, 45, 0.7),
-            rgba(4, 21, 45, 1)),
-        url('images/deadpool.jpg');
-    background-size: cover;
-    background-position: center;
 }
 
 .container-search {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 64px;
+    margin-top: 0;
     max-width: var(--container-width);
 }
+
+
+.search-bar-placeholder {
+    display: none;
+    width: 604px;
+    max-width: var(--container-width);
+    height: 77px;
+    background-color: rgba(0, 0, 0, 0);
+    /* Light shadow effect */
+}
+
+
 
 .headings-search {
     display: flex;
@@ -62,6 +108,7 @@ a:visited {
     justify-content: space-between;
     height: fit-content;
     gap: 16px;
+    margin-bottom: 64px;
 }
 
 #heading-search {
@@ -97,10 +144,11 @@ a:visited {
     background-color: white;
     box-sizing: border-box;
     border-radius: 18px;
-    width: 604px;
+    width: var(--search-bar-width);
     max-width: var(--container-width);
     height: 77px;
     padding: 12px 18px;
+    margin: 0;
 
 
 }
@@ -143,6 +191,60 @@ a:visited {
     background-color: #D47700;
 }
 
+
+.headings-fade {
+    animation: fadeout 1.6s ease;
+    animation-fill-mode: forwards
+}
+
+@keyframes fadeout {
+    0% {
+        opacity: 1
+    }
+
+    to {
+        opacity: 0
+    }
+}
+
+.search-bar-animation {
+    animation: growThenSwipeUp 1.6s ease;
+    animation-fill-mode: forwards;
+    width: var(--container-width);
+    left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    z-index: 100;
+}
+
+@keyframes growThenSwipeUp {
+    0% {
+        width: 604px;
+        top: var(--search-bar-start-position);
+    }
+
+    7% {
+        width: calc(604px - 10px);
+        top: var(--search-bar-start-position);
+    }
+
+    50% {
+        width: var(--container-width);
+        top: var(--search-bar-start-position);
+    }
+
+    to {
+        top: var(--search-bar-end-position);
+
+    }
+}
+
+
+
+
 /* ------------- Results section ------------------ */
 .section-results {
     display: flex;
@@ -150,7 +252,9 @@ a:visited {
     align-items: center;
     gap: 28px;
     width: 100%;
-
+    margin-top: 48px;
+    margin-bottom: 80px;
+    position: relative;
 }
 
 .heading-results {
@@ -158,6 +262,19 @@ a:visited {
     font-weight: 300;
     margin: 0;
     padding: 0;
+}
+
+.search-error-text {
+    position: absolute;
+    font-weight: 400;
+    font-size: var(--p1);
+    text-align: center;
+    color: #ffffff;
+    background-color: rgb(216, 52, 30);
+    border-radius: 24px;
+    padding: 8px;
+    margin: 0;
+    transition: opacity 1.6s ease-in-out;
 }
 
 .container-cards {
@@ -223,7 +340,8 @@ a:visited {
 
 /* ------------------ MOVIE PAGE ---------------------*/
 .movie-page-body {
-    background-color: black;
+    background-color: white;
+    background-image: none;
 }
 
 /* ------------------ movie overview ---------------------*/
@@ -400,6 +518,19 @@ a:visited {
     stroke: #D47700;
 }
 
+.no-results {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: fit-content;
+    width: fit-content;
+}
+
+.no-results-icon {
+    width: 80px;
+    height: 100px;
+}
 
 .movie-description {
     font-size: var(--p1);
@@ -439,7 +570,6 @@ a:visited {
     display: flex;
     flex-direction: row;
     position: relative;
-
 }
 
 /* Carousel Track */
@@ -447,10 +577,11 @@ a:visited {
 .carousel-track {
     display: flex;
     overflow: auto;
-    gap: calc((1280px*0.1)/6);
+    gap: var(--card-movie-info-gap);
     scroll-behavior: smooth;
     transition: all 0.25s ease-in;
     overflow: hidden;
+    scroll-snap-type: x mandatory;
 
 }
 
@@ -465,14 +596,15 @@ button {
     height: auto;
     gap: 8px;
     margin-bottom: 16px;
-    scroll-snap-align: center;
-    width: calc((1280px*0.9)/6.5);
-
+    scroll-snap-align: start;
+    width: var(--card-movie-info-width);
+    scroll-margin-left: calc((var(--card-movie-info-width) * 0.25) + (var(--card-movie-info-gap)/2));
 }
 
 .card-poster-movie-info {
-    width: calc((1280px*0.9)/6.5);
+    width: var(--card-movie-info-width);
     object-fit: cover;
+    aspect-ratio: 5 / 7;
 }
 
 .card-info-div-movie-info {
@@ -544,17 +676,9 @@ button {
 
 
 @media only screen and (max-width: 1600px) {
-    .card-movie-info {
-        width: calc((var(--container-width)*0.9)/6.5);
-
-    }
-
-    .card-poster-movie-info {
-        width: calc((var(--container-width)*0.9)/6.5);
-    }
-
-    .carousel-track {
-        gap: calc((var(--container-width)*0.1)/6);
+    :root {
+        --card-movie-info-width: calc((var(--container-width)*0.9)/6.5);
+        --card-movie-info-gap: calc((var(--container-width)*0.1)/6);
     }
 }
 
@@ -562,23 +686,12 @@ button {
 @media only screen and (max-width: 1024px) {
     :root {
         --h1: 47px;
+        --card-movie-info-width: calc((var(--container-width)*0.9)/4.5);
+        --card-movie-info-gap: calc((var(--container-width)*0.1)/4);
     }
 
     .back-button {
         transform: translate(0, 0);
-    }
-
-    .card-movie-info {
-        width: calc((var(--container-width)*0.9)/4.5);
-
-    }
-
-    .card-poster-movie-info {
-        width: calc((var(--container-width)*0.9)/4.5);
-    }
-
-    .carousel-track {
-        gap: calc((var(--container-width)*0.1)/4);
     }
 
     .movie-information {
@@ -604,24 +717,13 @@ button {
         --h1: 36px;
         --heading-landing: 47px;
         --heading-results: 27px;
+        --card-movie-info-width: calc((var(--container-width)*0.9)/2.5);
+        --card-movie-info-gap: calc((var(--container-width)*0.1)/2);
     }
 
     .back-button {
         padding-bottom: 0;
         transform: translate(0, 100%);
-    }
-
-    .card-movie-info {
-        width: calc((var(--container-width)*0.9)/2.5);
-
-    }
-
-    .card-poster-movie-info {
-        width: calc((var(--container-width)*0.9)/2.5);
-    }
-
-    .carousel-track {
-        gap: calc((var(--container-width)*0.1)/2);
     }
 
     .movie-name-poster-fav {

@@ -1,8 +1,13 @@
 window.addEventListener("load", function () {
-    const input = document.querySelector("#search-input");
-    const search = document.querySelector("#search-button");
-    const section_results = document.querySelector(".section-results");
+    const index_page_body = document.querySelector('.index-page-body');
+    const container_search = document.querySelector('.container-search');
+    const headings_search = document.querySelector(".headings-search");
     const form = document.querySelector('form')
+    const search_bar = document.querySelector(".search-bar");
+    const input = document.querySelector("#search-input");
+    const search_bar_placeholder = document.querySelector('.search-bar-placeholder');
+    const section_results = document.querySelector(".section-results");
+    let first_user_search = true;
 
     form.addEventListener('submit', getResults)
 
@@ -18,18 +23,15 @@ window.addEventListener("load", function () {
             const json = data.json();
 
 
-
             json.then(function (data) {
-                console.log(data);
-                let htmlinjection = "";
-                console.log(data.length);
+                let htmlinjection = '';
+                if (data.length !== 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        const show = data[i].show
+                        const imageString = show.image !== null ? show.image.medium : "images/error.png"
+                        let genreString = show.genres.join(", ");
 
-                for (var i = 0; i < data.length; i++) {
-                    const show = data[i].show
-                    const imageString = show.image !== null ? show.image.medium : "images/error.png"
-                    let genreString = show.genres.join(", ");
-
-                    htmlinjection = htmlinjection + `
+                        htmlinjection += `
                     <a href="movie.html?id=${show.id}" class="card">
                         <div>
                             <img class="card-poster" src="${imageString}" />
@@ -40,63 +42,107 @@ window.addEventListener("load", function () {
                         </div>
                     </a>
                     `
+                    }
+                    if (first_user_search === true) {
+                        htmlinjection = `<div class='container-cards'>${htmlinjection}</div>`;
+                        //Have to wait for animation to inject html
+                        searchAnimation(htmlinjection);
+                        first_user_search = false;
+                    } else {
+                        htmlinjection = `<div class='container-cards'>${htmlinjection}</div>`;
+                        section_results.innerHTML = htmlinjection;
+                    }
+
+
+
                 }
-                section_results.innerHTML = `
-                <h2 class="heading-results">Results</h2>
-                <div class="container-cards">` + htmlinjection + "</div>";
+                else {
+                    htmlinjection = `<h2 class='search-error-text'>No results, please try again </h2>`
+                    section_results.innerHTML = htmlinjection;
+                }
             });
         });
     };
 
-    /* ----------------------- Search bar animation -----------------------  */
-    const films = ["Twilight", "Moonlight", "Nightcrawler"];
+    /* ----------------------- Search animation -----------------------  */
+    function searchAnimation(htmlinjection) {
+        //Calculating search bar's absolute y poisiton
+        //That'll be the start poisition for search bar animation
+        const rect = search_bar.getBoundingClientRect();
+        const scrollTop = window.pageYOffSet || document.documentElement.scrollTop;
+        const search_bar_y_poisition = rect.top + scrollTop;
+
+        document.documentElement.style.setProperty('--search-bar-start-position', search_bar_y_poisition + 'px');
+        document.documentElement.style.setProperty('--search-bar-end-position', 'var(--search-bar-margin-after-animation)');
+        document.documentElement.style.setProperty('--search-bar-width', 'var(--container-width)');
+
+
+        headings_search.classList.add("headings-fade");
+        document.querySelector('.background-image').style.opacity = '0';
+        search_bar_placeholder.style.display = 'block';
+        search_bar.classList.add("search-bar-animation");
+        //throws an error but don't know why
+        //document.querySelector('.search-error-text').style.opacity = '0';
+
+        search_bar.addEventListener('animationend', () => {
+            headings_search.style.display = 'none';
+            search_bar_placeholder.style.display = 'none';
+            search_bar.classList.remove("search-bar-animation");
+            container_search.style.marginTop = 'var(--search-bar-margin-after-animation)';
+            index_page_body.style.justifyContent = 'flex-start';
+
+            section_results.innerHTML = htmlinjection;
+        });
+
+
+    }
+
+    /* ----------------------- Search bar typing animation -----------------------  */
+    const shows = ["Breaking Bad", "Game of Thrones", "White Lotus", "Black Mirror"];
     const typingSpeed = 150;
     const erasingSpeed = 100;
-    const delayBetweenFilms = 1000;
-    const filmPause = 2000;
+    const delayBetweenShows = 1000;
+    const showPause = 2000;
 
-    let filmIndex = 0;
+    let showIndex = 0;
     let charIndex = 0;
-    let typeFilmTimeout;
-    let eraseFilmTimeout;
+    let typeShowTimeout;
+    let eraseShowTimeout;
 
-    function typeFilm() {
-        if (charIndex < films[filmIndex].length) {
-            input.placeholder += films[filmIndex].charAt(charIndex);
-            //films[filmIndex][charIndex]
+    function typeShow() {
+        if (charIndex < shows[showIndex].length) {
+            input.placeholder += shows[showIndex].charAt(charIndex);
+            //shows[showIndex][charIndex]
             charIndex++;
-            typeFilmTimeout = setTimeout(typeFilm, typingSpeed);
+            typeShowTimeout = setTimeout(typeShow, typingSpeed);
         } else {
-            typeFilmTimeout = setTimeout(eraseFilm, filmPause);
+            typeShowTimeout = setTimeout(eraseShow, showPause);
         }
     }
 
-    function eraseFilm() {
+    function eraseShow() {
         if (charIndex > 0) {
-            input.placeholder = films[filmIndex].substring(0, charIndex - 1);
+            input.placeholder = shows[showIndex].substring(0, charIndex - 1);
             charIndex--;
-            eraseFilmTimeout = setTimeout(eraseFilm, erasingSpeed);
+            eraseShowTimeout = setTimeout(eraseShow, erasingSpeed);
         } else {
-            filmIndex = (filmIndex + 1) % films.length; // resets to 0 when filmIndex = film.length
-            eraseFilmTimeout = setTimeout(typeFilm, delayBetweenFilms);
+            showIndex = (showIndex + 1) % shows.length; // resets to 0 when showIndex = show.length
+            eraseShowTimeout = setTimeout(typeShow, delayBetweenShows);
         }
     }
 
     function clearInput() {
-        clearTimeout(typeFilmTimeout);
-        clearTimeout(eraseFilmTimeout);
+        clearTimeout(typeShowTimeout);
+        clearTimeout(eraseShowTimeout);
         charIndex = 0;
         input.placeholder = '';
     }
 
     input.addEventListener('focus', clearInput);
-    input.addEventListener('blur', typeFilm);
-    typeFilm();
+    input.addEventListener('blur', typeShow);
+    typeShow();
 
 });
-
-
-
 
 
 

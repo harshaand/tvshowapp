@@ -57,7 +57,25 @@ window.addEventListener("load", function () {
 
         });
     });
+    /* ----------------------- ERROR CATCHER -----------------------  */
+    function catchPromiseRejection(slider) {
+        let htmlinjection = "";
+        console.log("oopsy");
+        htmlinjection = htmlinjection + `
+           
+                <div class='no-results'>
+                <svg class='no-results-icon'>
+                    <use href="#my-svg"></use>
+                </svg>
+                <h3>No Results </h3>
+                </div>
+            <div class="card-movie-info"></div>
+                `
 
+        slider.innerHTML = htmlinjection;
+    }
+
+    /* ---------------------------------------------------------  */
 
     /* ----------------------- Cast - movie info section -----------------------  */
     let fav_btn = document.querySelector('#fav-btn');
@@ -74,15 +92,17 @@ window.addEventListener("load", function () {
         "https://api.tvmaze.com/shows/" + id + "/cast",
         { method: "Get" });
 
-    promise_cast.then(function (data) {
+    promise_cast.then((data) => {
         const json = data.json();
-
         json.then(function (data) {
+            console.log(data);
             let htmlinjection = "";
             for (var i = 0; i < data.length; i++) {
+                const imageString = data[i].person.image.medium !== null ? data[i].person.image.medium : "images/error.png"
+
                 htmlinjection = htmlinjection + `
                     <div class="card-movie-info">
-                        <img class="card-poster-movie-info" src="` + data[i].person.image.medium + `" alt="">
+                        <img class="card-poster-movie-info" src="${imageString}" alt="">
                         <div class="card-info-div-movie-info">
                             <h3 class="card-title-movie-info">` + data[i].person.name + `</h3>
                             <h4 class="card-title-extra">(` + data[i].character.name + `)</h4>
@@ -91,15 +111,15 @@ window.addEventListener("load", function () {
                     `
             }
             cast_slider.innerHTML = htmlinjection;
-
-
-
-
-
             update_carousel_btn_visibility(cast_slider, cast_left_btn, cast_right_btn);
 
-
+        }).catch(() => {
+            catchPromiseRejection(cast_slider)
+            update_carousel_btn_visibility(cast_slider, cast_left_btn, cast_right_btn);
         });
+    }).catch(() => {
+        catchPromiseRejection(cast_slider)
+        update_carousel_btn_visibility(cast_slider, cast_left_btn, cast_right_btn);
     });
 
     /* ----------------------- Seasons - movie info section -----------------------  */
@@ -111,6 +131,8 @@ window.addEventListener("load", function () {
     const promise_seasons = window.fetch(
         "https://api.tvmaze.com/shows/" + id + "/seasons",
         { method: "Get" });
+
+
 
     promise_seasons.then(function (data) {
         const json = data.json();
@@ -144,7 +166,13 @@ window.addEventListener("load", function () {
 
 
 
+        }).catch(() => {
+            catchPromiseRejection(seasons_slider)
+            update_carousel_btn_visibility(seasons_slider, seasons_left_btn, seasons_right_btn);
         });
+    }).catch(() => {
+        catchPromiseRejection(seasons_slider)
+        update_carousel_btn_visibility(seasons_slider, seasons_left_btn, seasons_right_btn);
     });
     /* ----------------------- Movie fav -----------------------  */
 
