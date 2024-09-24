@@ -64,7 +64,7 @@ window.addEventListener("load", function () {
         //Calculating search bar's absolute y poisiton
         //That'll be the start poisition for search bar animation
         const rect = search_bar.getBoundingClientRect();
-        const scroll_top = window.pageYOffSet || document.documentElement.scroll_top;
+        const scroll_top = window.pageYOffSet || document.documentElement.scrollTop;
         const search_bar_y_poisition = rect.top + scroll_top;
 
         document.documentElement.style.setProperty('--search-bar-start-position', search_bar_y_poisition + 'px');

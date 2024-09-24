@@ -45,19 +45,21 @@ window.addEventListener("load", function () {
         });
     });
     /* ----------------------- Error catcher -----------------------  */
-    function catchPromiseRejection(slider) {
+    function catchPromiseRejection(container) {
         let html_injection = "";
         console.log("oopsy");
+        container.style.setProperty('justify-content', 'center');
         html_injection = html_injection + `
-            <div class='no-results'>
-                <svg class='no-results-icon'>
-                    <use href="#error-svg"></use>
-                </svg>
-                <h3>No Results </h3>
-            </div>
-            <div class="card-show-info"></div>`
+            <div class="card-show-info">
+                <div class='no-results'>
+                    <svg class='no-results-icon'>
+                        <use href="#error-svg"></use>
+                    </svg>
+                    <p>No Results </p>
+                </div>    
+            </div>`
 
-        slider.innerHTML = html_injection;
+        container.innerHTML = html_injection;
     }
 
     /* ----------------------- Cast - show info section -----------------------  */
@@ -90,7 +92,7 @@ window.addEventListener("load", function () {
             updateSliderBtnVisibility(cast_slider, cast_left_btn, cast_right_btn);
 
         }).catch(() => {
-            catchPromiseRejection(cast_slider)
+            catchPromiseRejection(document.querySelector("#cast-container"))
             updateSliderBtnVisibility(cast_slider, cast_left_btn, cast_right_btn);
         });
     });
@@ -131,7 +133,7 @@ window.addEventListener("load", function () {
 
 
         }).catch(() => {
-            catchPromiseRejection(seasons_slider)
+            catchPromiseRejection(document.querySelector("#seasons-container"))
             updateSliderBtnVisibility(seasons_slider, seasons_left_btn, seasons_right_btn);
         });
     });
