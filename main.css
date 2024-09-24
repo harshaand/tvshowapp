@@ -147,8 +147,8 @@ a:visited {
     background-color: white;
     box-sizing: border-box;
     border-radius: 18px;
-    width: var(--search-bar-width);
-    max-width: var(--container-max-width);
+    width: var(--container-width);
+    max-width: var(--search-bar-width);
     height: 77px;
     padding: 12px 18px;
     margin: 0;
@@ -213,7 +213,7 @@ a:visited {
     animation: growThenSwipeUp 1.6s ease;
     animation-fill-mode: forwards;
     width: var(--container-width);
-    max-width: var(--container-max-width);
+    max-width: var(--search-bar-width);
     left: 0;
     margin-left: auto;
     margin-right: auto;
@@ -225,18 +225,20 @@ a:visited {
 
 @keyframes growThenSwipeUp {
     0% {
-        width: 604px;
+        width: 80vw;
+        max-width: 604px;
         top: var(--search-bar-start-position);
     }
 
     7% {
-        width: calc(604px - 10px);
+        width: calc(80vw - 10px);
+        max-width: calc(604px - 10px);
         top: var(--search-bar-start-position);
     }
 
     50% {
-        width: var(--container-width);
-        max-width: var(--container-max-width);
+        width: 80vw;
+        max-width: 1280px;
         top: var(--search-bar-start-position);
     }
 
@@ -723,13 +725,20 @@ button {
     }
 
     .back-button {
+        position: static;
         padding-bottom: 0;
-        transform: translate(0, 100%);
+        margin-bottom: 0;
     }
 
     .show-name-poster-fav {
+        justify-content: flex-start;
         flex-wrap: wrap;
         align-items: flex-start;
+        gap: 8px;
+    }
+
+    .show-title-fav {
+        align-items: center;
     }
 
     .show-information {
@@ -747,6 +756,7 @@ button {
     }
 
     .show-description-mobile {
+        padding-left: 8px;
         display: block;
         order: 3;
     }
