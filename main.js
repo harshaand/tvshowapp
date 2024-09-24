@@ -143,3 +143,25 @@ window.addEventListener("load", function () {
 
 
 
+function updateCardsSize() {
+    const container_cards_show_info = document.querySelector(".container-cards-show-info");
+    const container_width = parseFloat(window.getComputedStyle(container_cards_show_info).width);
+    const cards = document.querySelector(".card-show-info");
+    const cards_width = parseFloat(window.getComputedStyle(cards).width);
+
+
+    slider.addEventListener('scroll', updateCardsSize);
+    updateCardsSize();
+
+
+}
+
+// Create a ResizeObserver
+const resizeObserver = new ResizeObserver(entries => { updateCardsSize(); });
+
+// Start observing the resizableDiv for size changes
+resizeObserver.observe();
+
+
+
+
