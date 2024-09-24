@@ -10,7 +10,7 @@ window.addEventListener("load", function () {
     let first_user_search = true;
 
     form.addEventListener('submit', getResults)
-
+    /* ----------------------- Search functionality -----------------------  */
     function getResults(event) {
         event.preventDefault();
 
@@ -19,58 +19,53 @@ window.addEventListener("load", function () {
             { method: "Get" });
 
 
-        promise.then(function (data) {
+        promise.then((data) => {
             const json = data.json();
-
-
             json.then(function (data) {
-                let htmlinjection = '';
+                let html_injection = '';
                 if (data.length !== 0) {
                     for (var i = 0; i < data.length; i++) {
                         const show = data[i].show
-                        const imageString = show.image !== null ? show.image.medium : "images/error.png"
-                        let genreString = show.genres.join(", ");
+                        const image_string = show.image !== null ? show.image.medium : "images/error.png"
+                        let genre_string = show.genres.join(", ");
 
-                        htmlinjection += `
-                    <a href="show.html?id=${show.id}" class="card">
-                        <div>
-                            <img class="card-poster" src="${imageString}" />
-                        </div>
-                        <div class="card-info">
-                            <h3 class="card-title">${show.name}</h3>
-                            <div class="card-genre-tags">${genreString}</div>
-                        </div>
-                    </a>
+                        html_injection += `
+                        <a href="show.html?id=${show.id}" class="card">
+                            <div>
+                                <img class="card-poster" src="${image_string}" />
+                            </div>
+                            <div class="card-info">
+                                <h3 class="card-title">${show.name}</h3>
+                                <div class="card-genre-tags">${genre_string}</div>
+                            </div>
+                        </a>
                     `
                     }
                     if (first_user_search === true) {
-                        htmlinjection = `<div class='container-cards'>${htmlinjection}</div>`;
-                        //Have to wait for animation to inject html
-                        searchAnimation(htmlinjection);
+                        html_injection = `<div class='container-cards'>${html_injection}</div>`;
+                        //Have to wait for animation (to finish) before injecting html
+                        searchAnimation(html_injection);
                         first_user_search = false;
                     } else {
-                        htmlinjection = `<div class='container-cards'>${htmlinjection}</div>`;
-                        section_results.innerHTML = htmlinjection;
+                        html_injection = `<div class='container-cards'>${html_injection}</div>`;
+                        section_results.innerHTML = html_injection;
                     }
-
-
-
                 }
                 else {
-                    htmlinjection = `<h2 class='search-error-text'>No results, please try again </h2>`
-                    section_results.innerHTML = htmlinjection;
+                    html_injection = `<h2 class='search-error-text'>No results, please try again </h2>`
+                    section_results.innerHTML = html_injection;
                 }
             });
         });
     };
 
     /* ----------------------- Search animation -----------------------  */
-    function searchAnimation(htmlinjection) {
+    function searchAnimation(html_injection) {
         //Calculating search bar's absolute y poisiton
         //That'll be the start poisition for search bar animation
         const rect = search_bar.getBoundingClientRect();
-        const scrollTop = window.pageYOffSet || document.documentElement.scrollTop;
-        const search_bar_y_poisition = rect.top + scrollTop;
+        const scroll_top = window.pageYOffSet || document.documentElement.scroll_top;
+        const search_bar_y_poisition = rect.top + scroll_top;
 
         document.documentElement.style.setProperty('--search-bar-start-position', search_bar_y_poisition + 'px');
         document.documentElement.style.setProperty('--search-bar-end-position', 'var(--search-bar-margin-after-animation)');
@@ -81,8 +76,10 @@ window.addEventListener("load", function () {
         document.querySelector('.background-image').style.opacity = '0';
         search_bar_placeholder.style.display = 'block';
         search_bar.classList.add("search-bar-animation");
-        //throws an error but don't know why
-        //document.querySelector('.search-error-text').style.opacity = '0';
+        //If first search is successful, the page will not have this element so will throw an error
+        if (document.querySelector('.search-error-text')) {
+            document.querySelector('.search-error-text').style.opacity = '0';
+        }
 
         search_bar.addEventListener('animationend', () => {
             headings_search.style.display = 'none';
@@ -91,7 +88,7 @@ window.addEventListener("load", function () {
             container_search.style.marginTop = 'var(--search-bar-margin-after-animation)';
             index_page_body.style.justifyContent = 'flex-start';
 
-            section_results.innerHTML = htmlinjection;
+            section_results.innerHTML = html_injection;
         });
 
 
@@ -99,42 +96,41 @@ window.addEventListener("load", function () {
 
     /* ----------------------- Search bar typing animation -----------------------  */
     const shows = ["Breaking Bad", "Game of Thrones", "White Lotus", "Black Mirror"];
-    const typingSpeed = 150;
-    const erasingSpeed = 100;
-    const delayBetweenShows = 1000;
-    const showPause = 2000;
+    const typing_speed = 150;
+    const erasing_speed = 100;
+    const delay_between_shows = 1000;
+    const show_pause = 2000;
 
-    let showIndex = 0;
-    let charIndex = 0;
-    let typeShowTimeout;
-    let eraseShowTimeout;
+    let show_index = 0;
+    let char_index = 0;
+    let type_show_timeout;
+    let erase_show_timeout;
 
     function typeShow() {
-        if (charIndex < shows[showIndex].length) {
-            input.placeholder += shows[showIndex].charAt(charIndex);
-            //shows[showIndex][charIndex]
-            charIndex++;
-            typeShowTimeout = setTimeout(typeShow, typingSpeed);
+        if (char_index < shows[show_index].length) {
+            input.placeholder += shows[show_index].charAt(char_index);
+            char_index++;
+            type_show_timeout = setTimeout(typeShow, typing_speed);
         } else {
-            typeShowTimeout = setTimeout(eraseShow, showPause);
+            type_show_timeout = setTimeout(eraseShow, show_pause);
         }
     }
 
     function eraseShow() {
-        if (charIndex > 0) {
-            input.placeholder = shows[showIndex].substring(0, charIndex - 1);
-            charIndex--;
-            eraseShowTimeout = setTimeout(eraseShow, erasingSpeed);
+        if (char_index > 0) {
+            input.placeholder = shows[show_index].substring(0, char_index - 1);
+            char_index--;
+            erase_show_timeout = setTimeout(eraseShow, erasing_speed);
         } else {
-            showIndex = (showIndex + 1) % shows.length; // resets to 0 when showIndex = show.length
-            eraseShowTimeout = setTimeout(typeShow, delayBetweenShows);
+            show_index = (show_index + 1) % shows.length; // resets to 0 when show_index = show.length
+            erase_show_timeout = setTimeout(typeShow, delay_between_shows);
         }
     }
 
     function clearInput() {
-        clearTimeout(typeShowTimeout);
-        clearTimeout(eraseShowTimeout);
-        charIndex = 0;
+        clearTimeout(type_show_timeout);
+        clearTimeout(erase_show_timeout);
+        char_index = 0;
         input.placeholder = '';
     }
 

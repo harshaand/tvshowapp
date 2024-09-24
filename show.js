@@ -44,11 +44,11 @@ window.addEventListener("load", function () {
             initialiseFavButton();
         });
     });
-    /* ----------------------- ERROR CATCHER -----------------------  */
+    /* ----------------------- Error catcher -----------------------  */
     function catchPromiseRejection(slider) {
-        let htmlinjection = "";
+        let html_injection = "";
         console.log("oopsy");
-        htmlinjection = htmlinjection + `
+        html_injection = html_injection + `
             <div class='no-results'>
                 <svg class='no-results-icon'>
                     <use href="#error-svg"></use>
@@ -57,11 +57,11 @@ window.addEventListener("load", function () {
             </div>
             <div class="card-show-info"></div>`
 
-        slider.innerHTML = htmlinjection;
+        slider.innerHTML = html_injection;
     }
 
     /* ----------------------- Cast - show info section -----------------------  */
-    const cast_slider = document.querySelector("#cast-carousel-track");
+    const cast_slider = document.querySelector("#cast-slider");
     const cast_left_btn = document.querySelector("#cast-left-btn");
     const cast_right_btn = document.querySelector("#cast-right-btn");
 
@@ -73,11 +73,11 @@ window.addEventListener("load", function () {
     promise_cast.then((data) => {
         const json = data.json();
         json.then((data) => {
-            let htmlinjection = "";
+            let html_injection = "";
             for (var i = 0; i < data.length; i++) {
                 const imageString = data[i].person.image.medium !== null ? data[i].person.image.medium : "images/error.png"
 
-                htmlinjection = htmlinjection + `
+                html_injection = html_injection + `
                     <div class="card-show-info">
                         <img class="card-poster-show-info" src="${imageString}" alt="">
                         <div class="card-info-div-show-info">
@@ -86,17 +86,17 @@ window.addEventListener("load", function () {
                         </div>
                     </div>`
             }
-            cast_slider.innerHTML = htmlinjection;
-            update_carousel_btn_visibility(cast_slider, cast_left_btn, cast_right_btn);
+            cast_slider.innerHTML = html_injection;
+            updateSliderBtnVisibility(cast_slider, cast_left_btn, cast_right_btn);
 
         }).catch(() => {
             catchPromiseRejection(cast_slider)
-            update_carousel_btn_visibility(cast_slider, cast_left_btn, cast_right_btn);
+            updateSliderBtnVisibility(cast_slider, cast_left_btn, cast_right_btn);
         });
     });
 
     /* ----------------------- Seasons - show info section -----------------------  */
-    const seasons_slider = document.querySelector("#seasons-carousel-track");
+    const seasons_slider = document.querySelector("#seasons-slider");
     const seasons_left_btn = document.querySelector("#seasons-left-btn");
     const seasons_right_btn = document.querySelector("#seasons-right-btn");
 
@@ -107,16 +107,16 @@ window.addEventListener("load", function () {
 
 
 
-    promise_seasons.then(function (data) {
+    promise_seasons.then((data) => {
         const json = data.json();
 
-        json.then(function (data) {
-            let htmlinjection = "";
+        json.then((data) => {
+            let html_injection = "";
             for (var i = 0; i < data.length; i++) {
                 // ternary operator
                 const imageString = data[i].image !== null ? data[i].image.medium : "images/error.png"
 
-                htmlinjection = htmlinjection + `
+                html_injection = html_injection + `
                     <div class="card-show-info">
                         <img class="card-poster-show-info" src="${imageString}" alt="">
                         <div class="card-info-div-show-info">
@@ -125,17 +125,17 @@ window.addEventListener("load", function () {
                     </div>
                 `
             }
-            seasons_slider.innerHTML = htmlinjection;
-            update_carousel_btn_visibility(seasons_slider, seasons_left_btn, seasons_right_btn);
+            seasons_slider.innerHTML = html_injection;
+            updateSliderBtnVisibility(seasons_slider, seasons_left_btn, seasons_right_btn);
 
 
 
         }).catch(() => {
             catchPromiseRejection(seasons_slider)
-            update_carousel_btn_visibility(seasons_slider, seasons_left_btn, seasons_right_btn);
+            updateSliderBtnVisibility(seasons_slider, seasons_left_btn, seasons_right_btn);
         });
     });
-    /* ----------------------- Show fav -----------------------  */
+    /* ----------------------- Show favourite (button) -----------------------  */
     let fav_btn = document.querySelector('#fav-btn');
     let star = document.querySelector('.star');
     let show_fav;
@@ -176,12 +176,10 @@ window.addEventListener("load", function () {
         }
     }
 
-    /* ----------------------- Carousels -----------------------  */
+    /* ----------------------- Sliders - show info section -----------------------  */
 
-
-
-    function update_carousel_btn_visibility(slider, left_btn, right_btn) {
-        function update_button_visibility() {
+    function updateSliderBtnVisibility(slider, left_btn, right_btn) {
+        function updateButtonVisibility() {
             const container_cards_show_info = document.querySelector(".container-cards-show-info");
             const container_width = parseFloat(window.getComputedStyle(container_cards_show_info).width);
             const cards = document.querySelector(".card-show-info");
@@ -217,23 +215,16 @@ window.addEventListener("load", function () {
 
 
         }
-        slider.addEventListener('scroll', update_button_visibility);
-        update_button_visibility();
-
-
-
-
+        slider.addEventListener('scroll', updateButtonVisibility);
+        updateButtonVisibility();
 
         // Create a ResizeObserver
-        const resizeObserver = new ResizeObserver(entries => { update_button_visibility(); });
+        const resizeObserver = new ResizeObserver(entries => { updateButtonVisibility(); });
 
         // Start observing the resizableDiv for size changes
         resizeObserver.observe(slider);
 
     }
-
-
-
 
 });
 

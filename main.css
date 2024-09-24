@@ -97,7 +97,6 @@ a:visited {
     max-width: var(--container-width);
     height: 77px;
     background-color: rgba(0, 0, 0, 0);
-    /* Light shadow effect */
 }
 
 
@@ -117,7 +116,6 @@ a:visited {
     text-align: center;
     margin: 0;
     padding: 0;
-
 }
 
 .heading-gradient {
@@ -133,7 +131,6 @@ a:visited {
     color: #A1A1A1;
     margin: 0;
     padding: 0;
-
 }
 
 .search-bar {
@@ -149,8 +146,6 @@ a:visited {
     height: 77px;
     padding: 12px 18px;
     margin: 0;
-
-
 }
 
 .search-icon-div {
@@ -191,6 +186,7 @@ a:visited {
     background-color: #D47700;
 }
 
+/* ------------- Results section ------------------ */
 
 .headings-fade {
     animation: fadeout 1.6s ease;
@@ -242,10 +238,6 @@ a:visited {
     }
 }
 
-
-
-
-/* ------------- Results section ------------------ */
 .section-results {
     display: flex;
     flex-direction: column;
@@ -277,6 +269,7 @@ a:visited {
     transition: opacity 1.6s ease-in-out;
 }
 
+
 .container-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(210px, max-content));
@@ -305,7 +298,6 @@ a:visited {
     transform: translateY(-5px);
     border: 2px solid #F59509;
 }
-
 
 
 .card-poster {
@@ -344,15 +336,12 @@ a:visited {
     background-image: none;
 }
 
-/* ------------------ show overview ---------------------*/
-/*-----------------------------------------------------------------------------------------------------------------*/
-/*???????????*/
+/* ------------------ Show overview section ---------------------*/
 .section-show-overview {
     background: rgb(31, 31, 31);
     position: relative;
 }
 
-/*???????????*/
 .section-background-div {
     display: flex;
     width: 100%;
@@ -365,7 +354,6 @@ a:visited {
     background-repeat: no-repeat;
 }
 
-/*???????????*/
 .section-background-div::before {
     width: 100%;
     content: '';
@@ -384,8 +372,6 @@ a:visited {
     backdrop-filter: blur(50px) saturate(100%);
 }
 
-
-
 .container-show-overview {
     display: flex;
     flex-direction: column;
@@ -394,11 +380,8 @@ a:visited {
     gap: 0;
     width: var(--container-width);
     max-width: 1280px;
-    /*???????????*/
     z-index: 0;
 }
-
-/*-----------------------------------------------------------------------------------------------------------------*/
 
 .show-name-poster-fav {
     position: relative;
@@ -427,10 +410,6 @@ a:visited {
     display: none;
 }
 
-
-
-
-
 .back-button {
     position: absolute;
     bottom: 100%;
@@ -448,7 +427,6 @@ a:visited {
 
 .show-poster {
     height: 100%;
-    /* ???????????*/
 }
 
 .show-title {
@@ -537,7 +515,7 @@ a:visited {
     font-weight: 300;
 }
 
-/* ------------- show info ------------------ */
+/* ------------- Show info section ------------------ */
 .section-show-information {
     display: flex;
     flex-direction: column;
@@ -572,9 +550,7 @@ a:visited {
     position: relative;
 }
 
-/* Carousel Track */
-/*slider*/
-.carousel-track {
+.slider {
     display: flex;
     overflow: auto;
     gap: var(--card-show-info-gap);
@@ -587,7 +563,6 @@ a:visited {
 
 button {
     visibility: visible;
-    /* Buttons are visible by default */
 }
 
 .card-show-info {
@@ -630,7 +605,7 @@ button {
     width: 100%;
 }
 
-.carousel-btn {
+.slider-btn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -646,11 +621,11 @@ button {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.carousel-btn:hover {
+.slider-btn:hover {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
-.carousel-btn:active {
+.slider-btn:active {
     background-color: rgba(0, 0, 0, 0.35);
 }
 
